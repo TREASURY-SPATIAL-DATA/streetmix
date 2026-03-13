@@ -23,12 +23,13 @@ import store from '~/src/store'
 import { initialize } from '~/src/app/initialization.js'
 import { App } from '~/src/app/App.js'
 import { installTreasuryBridge } from '~/src/app/treasuryBridge.js'
+import { getRuntimeHostname } from '~/src/app/runtime.ts'
 
 // Error tracking
 // Load this before all other modules. Only load when run in production.
 if (
-  window.location.hostname === 'streetmix.net' ||
-  window.location.hostname === 'www.streetmix.net'
+  getRuntimeHostname() === 'streetmix.net' ||
+  getRuntimeHostname() === 'www.streetmix.net'
 ) {
   Sentry.init({
     dsn: 'https://fac2c23600414d2fb78c128cdbdeaf6f@sentry.io/82756',

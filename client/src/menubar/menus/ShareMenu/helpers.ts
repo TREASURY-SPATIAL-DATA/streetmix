@@ -1,3 +1,4 @@
+import { getRuntimeHref } from '~/src/app/runtime.ts'
 import type { UserState } from '~/src/types'
 import type { StreetState } from '@streetmix/types'
 import type { IntlShape } from 'react-intl'
@@ -12,7 +13,7 @@ export interface SocialShareProps {
  * This may eventually change to a short URL generator - strt.mx
  */
 export function getSharingUrl(): string {
-  return window.location.href
+  return getRuntimeHref()
 }
 
 export function getSharingMessage(

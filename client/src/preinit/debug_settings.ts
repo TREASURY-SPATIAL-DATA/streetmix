@@ -11,6 +11,7 @@
 import store from '../store'
 import { setAppFlags } from '../store/slices/app.js'
 import { setDebugFlags } from '../store/slices/debug.js'
+import { getRuntimeSearchParams } from '../app/runtime.ts'
 
 export const debug = {
   forceLeftHandTraffic: false,
@@ -19,7 +20,7 @@ export const debug = {
   forceReadOnly: false,
 }
 
-const params = new URLSearchParams(window.location.search)
+const params = getRuntimeSearchParams()
 
 // Historically, params were valueless and they we had our own string
 // parsing code, but now we use the `URLSearchParams` global interface.

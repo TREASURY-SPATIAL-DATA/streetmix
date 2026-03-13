@@ -14,6 +14,7 @@ import {
   STREET_TEMPLATES,
 } from './constants.js'
 import { stripAppBasePath, withAppBasePath } from './basePath.js'
+import { getRuntimeUrl, getRuntimeSearchParams, replaceRuntimeUrl } from './runtime.ts'
 import { setMode, MODES } from './mode.js'
 
 import type { StreetAPIResponse } from '@streetmix/types'
@@ -33,7 +34,7 @@ export function processUrl(): void {
   // be possible for the URL to contain a trailing slash, but we don't want
   // that, so remove it, if present. This will cause the root pathname to be
   // an empty string.
-  const url = new URL(window.location.href)
+  const url = getRuntimeUrl()
   const pathname = stripAppBasePath(url.pathname.replace(/\/+$/, ''))
 
   // parts being split, although we really don't need to
@@ -67,7 +68,7 @@ export function processUrl(): void {
     if (params.size > 0) {
       newUrl += `?${params.toString()}`
     }
-    window.history.replaceState(null, '', newUrl)
+    replaceRuntimeUrl(newUrl)
 
     // Coming back from a successful sign in
   } else if (pathname === JUST_SIGNED_IN_PATH) {
@@ -172,7 +173,7 @@ export function updatePageUrl(
     url = getStreetUrl(store.getState().street)
   }
 
-  const params = new URLSearchParams(window.location.search)
+  const params = getRuntimeSearchParams()
 
   // Historically, params were valueless and they we had our own string
   // parsing code, but now we use the `URLSearchParams` global interface.
@@ -195,5 +196,5 @@ export function updatePageUrl(
     url += `?${params.toString()}`
   }
 
-  window.history.replaceState(null, '', url)
+  replaceRuntimeUrl(url)
 }

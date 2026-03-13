@@ -1,5 +1,6 @@
 import { tween } from 'shifty'
 import slugify from 'slugify'
+import { getRuntimeHostname } from '../app/runtime.ts'
 
 /**
  * Gets the relative position in pixels of a given element,
@@ -121,7 +122,7 @@ const isAbsoluteUrl = (url: string): boolean => {
 
 export const isUrlExternal = (
   url: string,
-  host: string = window.location.hostname
+  host: string = getRuntimeHostname()
 ): boolean => {
   if (isAbsoluteUrl(url)) {
     const providedHost = getHostFromUrl(url)

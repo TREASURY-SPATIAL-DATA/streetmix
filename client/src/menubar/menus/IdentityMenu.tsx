@@ -12,6 +12,7 @@ import USER_ROLES from '../../../../app/data/user_roles.json'
 import Menu, { type MenuProps } from './Menu.js'
 import { MenuItem } from './MenuItem.js'
 import { MenuSeparator } from './MenuSeparator.js'
+import { pushRuntimeUrl } from '~/src/app/runtime.ts'
 import './IdentityMenu.css'
 
 export function IdentityMenu(props: MenuProps) {
@@ -24,7 +25,7 @@ export function IdentityMenu(props: MenuProps) {
   const handleClickMyStreets = useCallback(
     (_event: React.MouseEvent) => {
       const myStreetsLink = user?.id !== undefined ? `/${user.id}` : ''
-      window.history.pushState({}, '', myStreetsLink)
+      pushRuntimeUrl(myStreetsLink)
       dispatch(openGallery({ userId: user.id }))
     },
     [user?.id, dispatch]

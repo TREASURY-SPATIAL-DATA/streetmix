@@ -3,6 +3,7 @@ import { LOCALES, DEFAULT_LOCALE, LOCALE_LEVELS } from '@streetmix/i18n'
 
 import store, { observeStore, type RootState } from '../store'
 import { changeLocale } from '../store/slices/locale'
+import { getRuntimeSearchParams } from '../app/runtime.ts'
 
 import type { LocaleDefinition, LocaleLevel } from '@streetmix/i18n'
 
@@ -11,7 +12,7 @@ import type { LocaleDefinition, LocaleLevel } from '@streetmix/i18n'
  */
 export async function initLocale (): Promise<void> {
   // See if there is a requested locale via the lang param
-  const paramLocale = new URLSearchParams(window.location.search).get('lang')
+  const paramLocale = getRuntimeSearchParams().get('lang')
 
   // Default language is set by browser, or is English if undetermined
   const defaultLocale = navigator.language || DEFAULT_LOCALE

@@ -6,6 +6,7 @@ import axios from 'axios'
 
 import models from '../../../db/models/index.js'
 import { appURL } from '../../../lib/url.ts'
+import { withAppBasePath } from '../../../lib/base_path.ts'
 import { logger } from '../../../lib/logger.ts'
 import {
   findUser,
@@ -41,7 +42,7 @@ const initCoil = () => {
       clientID: process.env.COIL_CLIENT_ID,
       clientSecret: process.env.COIL_CLIENT_SECRET,
       scope: 'simple_wm openid',
-      callbackURL: `${appURL.origin}/services/integrations/coil/callback`,
+      callbackURL: `${appURL.origin}${withAppBasePath('/services/integrations/coil/callback')}`,
       passReqToCallback: true,
       customHeaders: {
         authorization: `Basic ${authToken}`,

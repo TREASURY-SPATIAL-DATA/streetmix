@@ -4,6 +4,7 @@ import { Strategy as PatreonStrategy } from 'passport-patreon'
 
 import { logger } from '../../../lib/logger.ts'
 import { appURL } from '../../../lib/url.ts'
+import { withAppBasePath } from '../../../lib/base_path.ts'
 import models from '../../../db/models/index.js'
 import { findUser, addUserConnection } from './helpers.ts'
 
@@ -36,7 +37,7 @@ const initPatreon = () => {
       {
         clientID: process.env.PATREON_CLIENT_ID,
         clientSecret: process.env.PATREON_CLIENT_SECRET,
-        callbackURL: `${appURL.origin}/services/integrations/patreon/callback`,
+        callbackURL: `${appURL.origin}${withAppBasePath('/services/integrations/patreon/callback')}`,
         scope: 'users pledges-to-me my-campaign',
         passReqToCallback: true,
       },

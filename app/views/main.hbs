@@ -92,7 +92,7 @@
     <meta name="theme-color" content="#1a914e" />
 
     {{! Styles }}
-    <link href="/assets/main.{{cacheTimestamp}}.css" rel="stylesheet" />
+    <link href="{{APP_BASE_PATH}}/assets/main.{{cacheTimestamp}}.css" rel="stylesheet" />
 
     {{! Plausible.io analytics }}
     {{#if env.PLAUSIBLE_DOMAIN}}
@@ -119,6 +119,9 @@
     </section>
 
     <script src="https://platform.twitter.com/widgets.js" async></script>
-    <script src="/assets/main.{{cacheTimestamp}}.js" type="module"></script>
+    <script>
+      window.__STREETMIX_APP_BASE_PATH__ = '{{APP_BASE_PATH}}';
+    </script>
+    <script src="{{APP_BASE_PATH}}/assets/main.{{cacheTimestamp}}.js" type="module"></script>
   </body>
 </html>

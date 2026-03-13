@@ -10,6 +10,7 @@ import Checkbox from '~/src/ui/Checkbox.js'
 import Icon from '~/src/ui/Icon.js'
 import { Tooltip } from '~/src/ui/Tooltip.js'
 import { Terms } from '~/src/app/Terms.js'
+import { withAppBasePath } from '~/src/app/basePath.js'
 import { getStreetImage } from '~/src/streets/image.js'
 import { normalizeSlug } from '~/src/util/helpers.js'
 import Dialog from '../Dialog.js'
@@ -146,7 +147,7 @@ export function SaveAsImageDialog() {
     if (isNewExport) {
       const filename = makeFilename()
       saveAs(
-        `/api/v1/streets/${street.id}/image?transparentSky=${transparentSky}&labels=${segmentNames}&streetName=${streetName}&watermark=${watermark}&locale=${locale}&scale=${scale}&experimental=1`,
+        `${withAppBasePath(`/api/v1/streets/${street.id}/image`)}?transparentSky=${transparentSky}&labels=${segmentNames}&streetName=${streetName}&watermark=${watermark}&locale=${locale}&scale=${scale}&experimental=1`,
         filename
       )
       window.setTimeout(() => {
@@ -198,7 +199,7 @@ export function SaveAsImageDialog() {
     // to the API export directly, then skip the rest of the function
     if (isNewExport) {
       setDownloadDataUrl(
-        `/api/v1/streets/${street.id}/image?transparentSky=${transparentSky}&labels=${segmentNames}&streetName=${streetName}&watermark=${watermark}&locale=${locale}&scale=${scale}&experimental=1`
+        `${withAppBasePath(`/api/v1/streets/${street.id}/image`)}?transparentSky=${transparentSky}&labels=${segmentNames}&streetName=${streetName}&watermark=${watermark}&locale=${locale}&scale=${scale}&experimental=1`
       )
       return
     }

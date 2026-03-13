@@ -1,5 +1,6 @@
 import axios, { type AxiosInstance, type AxiosResponse } from 'axios'
 import axiosRetry, { exponentialDelay } from 'axios-retry'
+import { withAppBasePath } from '../app/basePath.js'
 
 import {
   type SentimentComment,
@@ -18,8 +19,8 @@ import type {
 } from '@streetmix/types'
 
 const MAX_API_RETRY = 3
-const BASE_URL_API_V1 = '/api/v1'
-const BASE_URL_SERVICES = '/services'
+const BASE_URL_API_V1 = withAppBasePath('/api/v1')
+const BASE_URL_SERVICES = withAppBasePath('/services')
 
 type APIResponse<T> = Promise<AxiosResponse<T>>
 

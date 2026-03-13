@@ -1,8 +1,9 @@
 import { URL_NEW_STREET } from './constants'
 import Authenticate from './auth0'
+import { withAppBasePath } from './basePath.js'
 
 const AUTH0_SIGN_IN_CALLBACK_URL = new URL(
-  '/services/auth/sign-in-callback',
+  withAppBasePath('/services/auth/sign-in-callback'),
   window.location.origin
 ).href
 
@@ -11,7 +12,7 @@ export function goReload() {
 }
 
 export function goHome() {
-  window.location.href = '/'
+  window.location.href = withAppBasePath('/')
 }
 
 export function goNewStreet(sameWindow) {

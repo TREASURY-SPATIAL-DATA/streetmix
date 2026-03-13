@@ -1,7 +1,7 @@
 import { round } from '@streetmix/utils'
 import Papa from 'papaparse'
 
-import { appURL } from './url.ts'
+import { externalAppURL } from './url.ts'
 
 const IMPERIAL_CONVERSION_RATE = 0.3048
 const IMPERIAL_PRECISION = 3
@@ -62,7 +62,7 @@ function getSliceData(slices = [], maxSliceCount) {
 }
 
 function getStreetUrl(street) {
-  let url = appURL.href
+  let url = externalAppURL.href
   if (street.creatorId) {
     url += street.creatorId
   } else {

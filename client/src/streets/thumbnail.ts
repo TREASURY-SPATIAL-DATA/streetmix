@@ -2,6 +2,7 @@ import { drawLine } from '@streetmix/export-image/src/labels'
 import { getSegmentInfo, getSegmentVariantInfo } from '@streetmix/parts'
 
 import { images } from '../app/load_resources.js'
+import { withAppBasePath } from '../app/basePath.js'
 import { prettifyWidth } from '../util/width_units.js'
 import { getSkyboxDef, makeCanvasGradientStopArray } from '../sky'
 import { getBoundaryItem, drawBoundary } from '../boundary'
@@ -220,8 +221,8 @@ function drawClouds(
   ctx.globalAlpha = sky.cloudOpacity ?? 1
 
   // Grab images
-  const skyFrontImg = images.get('/images/sky-front.svg')
-  const skyRearImg = images.get('/images/sky-rear.svg')
+  const skyFrontImg = images.get(withAppBasePath('/images/sky-front.svg'))
+  const skyRearImg = images.get(withAppBasePath('/images/sky-rear.svg'))
 
   // dy1 = top edge of sky-front image
   const dy1 = height - skyFrontImg.height
@@ -645,8 +646,8 @@ function drawWatermark(
     }
   )
   const wordmarkImage = invert
-    ? images.get('/images/wordmark_white.svg')
-    : images.get('/images/wordmark_black.svg')
+    ? images.get(withAppBasePath('/images/wordmark_white.svg'))
+    : images.get(withAppBasePath('/images/wordmark_black.svg'))
 
   // Separate string so that we can render a wordmark with an image
   const strings = text.replace(/{/g, '||{').replace(/}/g, '}||').split('||')

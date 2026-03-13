@@ -13,8 +13,9 @@ import passport from 'passport'
 import * as controllers from './app/controllers/index.ts'
 import * as requestHandlers from './app/lib/request_handlers/index.js'
 import { initCloudinary } from './app/lib/cloudinary.ts'
+import { appBasePath, appRouteVariants, withAppBasePath } from './app/lib/base_path.ts'
 import { compileSVGSprites } from './app/lib/svg_sprite.ts'
-import { appURL } from './app/lib/url.ts'
+import { externalAppURL } from './app/lib/url.ts'
 import apiRoutes from './app/api_routes.js'
 import serviceRoutes from './app/service_routes.js'
 import { logger } from './app/lib/logger.ts'
@@ -35,6 +36,7 @@ export default app
 // Get the timestamp of this server's start time to use as a cachebusting filename.
 const cacheTimestamp = Date.now()
 app.locals.cacheTimestamp = cacheTimestamp
+app.locals.APP_BASE_PATH = appBasePath
 
 process.on('uncaughtException', function (error) {
   logger.error(
@@ -186,7 +188,8 @@ app.use((req, res, next) => {
   }
 
   res.locals.STREETMIX_TITLE = 'Streetmix'
-  res.locals.STREETMIX_URL = appURL.href
+  res.locals.STREETMIX_URL = externalAppURL.href
+  res.locals.APP_BASE_PATH = appBasePath
 
   next()
 })
@@ -205,15 +208,17 @@ app.use((req, res, next) => {
 app.set('view engine', 'hbs')
 app.set('views', path.join(import.meta.dirname, '/app/views'))
 
-app.get('/help/about', (req, res) =>
+app.get(appRouteVariants('/help/about'), (req, res) =>
   res.redirect('https://www.opencollective.com/streetmix/')
 )
-app.get('/map', (req, res) => res.redirect('https://streetmix.github.io/map/'))
-app.get('/survey', jwtCheck, controllers.survey.get)
-app.get('/privacy-policy', (req, res) =>
+app.get(appRouteVariants('/map'), (req, res) =>
+  res.redirect('https://streetmix.github.io/map/')
+)
+app.get(appRouteVariants('/survey'), jwtCheck, controllers.survey.get)
+app.get(appRouteVariants('/privacy-policy'), (req, res) =>
   res.redirect('https://about.streetmix.net/privacy-policy/')
 )
-app.get('/terms-of-service', (req, res) =>
+app.get(appRouteVariants('/terms-of-service'), (req, res) =>
   res.redirect('https://about.streetmix.net/terms-of-use/')
 )
 
@@ -235,7 +240,7 @@ if (process.env.NODE_ENV !== 'production') {
 
   // This route must be defined before the catch-all handler of `/api/*`
   app.use(
-    '/api/docs',
+    withAppBasePath('/api/docs'),
     swaggerUi.serve,
     swaggerUi.setup(swaggerSpec, displayOptions)
   )
@@ -243,9 +248,21 @@ if (process.env.NODE_ENV !== 'production') {
 
 // API routes
 app.use('/api', apiRoutes)
+if (appBasePath) {
+  app.use(withAppBasePath('/api'), apiRoutes)
+}
 app.use('/services', serviceRoutes)
+if (appBasePath) {
+  app.use(withAppBasePath('/services'), serviceRoutes)
+}
 
 app.use('/assets', express.static(path.join(import.meta.dirname, '/build')))
+if (appBasePath) {
+  app.use(
+    withAppBasePath('/assets'),
+    express.static(path.join(import.meta.dirname, '/build'))
+  )
+}
 // Not sure if this sticks around forever, but it's a good way to serve static files
 // for templates, this can go away once the responsibility for making new streets and
 // processing template data entirely happens server side, which it may as well
@@ -253,7 +270,16 @@ app.use(
   '/assets/data',
   express.static(path.join(import.meta.dirname, '/app/data'))
 )
+if (appBasePath) {
+  app.use(
+    withAppBasePath('/assets/data'),
+    express.static(path.join(import.meta.dirname, '/app/data'))
+  )
+}
 app.use(express.static(path.join(import.meta.dirname, '/public')))
+if (appBasePath) {
+  app.use(withAppBasePath('/'), express.static(path.join(import.meta.dirname, '/public')))
+}
 
 // Catch-all for broken asset paths.
 // Matches '/images/*'
@@ -264,9 +290,22 @@ app.all(/\/images\/.*/, (req, res) => {
 app.all(/\/assets\/.*/, (req, res) => {
   res.status(404).render('404')
 })
+if (appBasePath) {
+  app.all(new RegExp(`^${appBasePath.replace(/\//g, '\\/')}/images/.*`), (req, res) => {
+    res.status(404).render('404')
+  })
+  app.all(new RegExp(`^${appBasePath.replace(/\//g, '\\/')}/assets/.*`), (req, res) => {
+    res.status(404).render('404')
+  })
+}
 
 app.get(
-  ['/:user_id/:namespacedId', '/:user_id/:namespacedId/:street_name'],
+  [
+    '/:user_id/:namespacedId',
+    '/:user_id/:namespacedId/:street_name',
+    withAppBasePath('/:user_id/:namespacedId'),
+    withAppBasePath('/:user_id/:namespacedId/:street_name'),
+  ],
   requestHandlers.metatags
 )
 

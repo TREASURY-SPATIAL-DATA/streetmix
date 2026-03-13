@@ -4,18 +4,20 @@
  * Loads images, etc and tracks progress. (WIP)
  */
 
+import { withAppBasePath } from './basePath.js'
+
 export const images = new Map()
 
 // Image tileset loading
 const IMAGES_TO_BE_LOADED = [
-  '/assets/icons.svg',
-  '/assets/illustrations.svg',
-  '/assets/images.svg',
-  '/images/wordmark.svg',
-  '/images/wordmark_black.svg',
-  '/images/wordmark_white.svg',
-  '/images/sky-front.svg',
-  '/images/sky-rear.svg',
+  withAppBasePath('/assets/icons.svg'),
+  withAppBasePath('/assets/illustrations.svg'),
+  withAppBasePath('/assets/images.svg'),
+  withAppBasePath('/images/wordmark.svg'),
+  withAppBasePath('/images/wordmark_black.svg'),
+  withAppBasePath('/images/wordmark_white.svg'),
+  withAppBasePath('/images/sky-front.svg'),
+  withAppBasePath('/images/sky-rear.svg'),
 ]
 
 const SVGStagingEl = document.getElementById('svg')

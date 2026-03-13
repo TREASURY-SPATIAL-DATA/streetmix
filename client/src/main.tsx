@@ -22,6 +22,7 @@ import store from '~/src/store'
 // Main object
 import { initialize } from '~/src/app/initialization.js'
 import { App } from '~/src/app/App.js'
+import { installTreasuryBridge } from '~/src/app/treasuryBridge.js'
 
 // Error tracking
 // Load this before all other modules. Only load when run in production.
@@ -46,4 +47,5 @@ root.render(
   </Provider>
 )
 
+installTreasuryBridge()
 initialize()

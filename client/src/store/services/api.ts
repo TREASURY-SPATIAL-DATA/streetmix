@@ -6,6 +6,7 @@ import { createApi } from '@reduxjs/toolkit/query/react'
 // https://github.com/parcel-bundler/parcel/issues/7622#issuecomment-1027569976
 import { fetchBaseQuery } from '@reduxjs/toolkit/query'
 import type { UserProfile } from '../../types'
+import { withAppBasePath } from '../../app/basePath.js'
 
 export const streetmixApi = createApi({
   reducerPath: 'streetmixApi',
@@ -14,7 +15,7 @@ export const streetmixApi = createApi({
     // Need to construct the API with absolute URL (not relative) for
     // mock-service-worker. See:
     // https://github.com/mswjs/msw/issues/1794#issuecomment-1803643227
-    baseUrl: new URL('/api/v1', location.origin).href
+    baseUrl: new URL(withAppBasePath('/api/v1'), location.origin).href
   }),
   endpoints: (builder) => ({
     getUser: builder.query<UserProfile, string | null>({

@@ -13,6 +13,7 @@ import {
   RESERVED_URLS,
   STREET_TEMPLATES,
 } from './constants.js'
+import { stripAppBasePath, withAppBasePath } from './basePath.js'
 import { setMode, MODES } from './mode.js'
 
 import type { StreetAPIResponse } from '@streetmix/types'
@@ -33,7 +34,7 @@ export function processUrl(): void {
   // that, so remove it, if present. This will cause the root pathname to be
   // an empty string.
   const url = new URL(window.location.href)
-  const pathname = url.pathname.replace(/\/+$/, '')
+  const pathname = stripAppBasePath(url.pathname.replace(/\/+$/, ''))
 
   // parts being split, although we really don't need to
   // filter out empty string parts
@@ -134,10 +135,10 @@ export function processUrl(): void {
 }
 
 export function getStreetUrl(street: StreetAPIResponse): string {
-  let url = '/'
+  let url = withAppBasePath('/')
   if (street.creatorId) {
     // Add a initial slash to the creator check to match reserved paths
-    if (RESERVED_URLS.indexOf('/' + street.creatorId) !== -1) {
+    if (RESERVED_URLS.indexOf(withAppBasePath('/' + street.creatorId)) !== -1) {
       url += URL_RESERVED_PREFIX
     }
 
@@ -166,7 +167,7 @@ export function updatePageUrl(
   let url: string
   if (forceGalleryUrl) {
     const slug = userId || 'gallery/'
-    url = '/' + slug
+    url = withAppBasePath('/' + slug)
   } else {
     url = getStreetUrl(store.getState().street)
   }

@@ -3,6 +3,7 @@ import axios from 'axios'
 import { userClient } from '../lib/auth0.ts'
 import { logger } from '../lib/logger.ts'
 import { appURL } from '../lib/url.ts'
+import { withAppBasePath } from '../lib/base_path.ts'
 
 const AccessTokenHandler = function (req, res) {
   return async (response) => {
@@ -19,7 +20,7 @@ const AccessTokenHandler = function (req, res) {
       const accessToken = body.access_token
       const { data: user } = await userClient.getUserInfo(accessToken)
       const apiRequestBody = getUserInfo(user)
-      const endpoint = `${appURL.origin}/api/v1/users`
+      const endpoint = `${appURL.origin}${withAppBasePath('/api/v1/users')}`
       const apiRequestOptions = {
         headers: {
           Cookie: `login_token=${idToken};`,
@@ -41,7 +42,7 @@ const AccessTokenHandler = function (req, res) {
           res.cookie('user_id', user.id || userAuthData, cookieOptions)
           res.cookie('refresh_token', refreshToken, cookieOptions)
           res.cookie('login_token', idToken, cookieOptions)
-          res.redirect('/services/auth/just-signed-in')
+          res.redirect(withAppBasePath('/services/auth/just-signed-in'))
         })
         .catch((error) => {
           logger.error('[auth0] Error from auth0 API when signing in: ' + error)
@@ -103,7 +104,7 @@ export function get(req, res) {
     client_id: process.env.AUTH0_CLIENT_ID,
     client_secret: process.env.AUTH0_CLIENT_SECRET,
     code: req.query.code,
-    redirect_uri: `${appURL.origin}/services/auth/sign-in-callback`,
+    redirect_uri: `${appURL.origin}${withAppBasePath('/services/auth/sign-in-callback')}`,
   }
   const options = {
     headers: { 'content-type': 'application/json' },

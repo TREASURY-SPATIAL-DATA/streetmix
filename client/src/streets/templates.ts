@@ -14,6 +14,7 @@ import { getVariantString } from '../segments/variant_utils.js'
 import { getSignInData, isSignedIn } from '../users/authentication.js'
 import { SETTINGS_UNITS_IMPERIAL } from '../users/constants.js'
 import { getLeftHandTraffic } from '../users/localization.js'
+import { withAppBasePath } from '../app/basePath.js'
 import { updateStreetData } from '../store/slices/street.js'
 import store from '../store'
 import { DEFAULT_SKYBOX } from '../sky/constants.js'
@@ -252,7 +253,7 @@ export const StreetTemplate = z.strictObject({
 type StreetTemplate = z.infer<typeof StreetTemplate>
 
 async function getTemplateData(id: string): Promise<StreetTemplate> {
-  const response = await window.fetch(`/assets/data/templates/${id}.yaml`)
+  const response = await window.fetch(withAppBasePath(`/assets/data/templates/${id}.yaml`))
   const yaml = await response.text()
   const json = load(yaml, {
     schema: JSON_SCHEMA,

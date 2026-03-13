@@ -2,7 +2,7 @@ import request from 'request'
 
 import models from '../../db/models/index.js'
 import { logger } from '../logger.ts'
-import { appURL } from '../url.ts'
+import { externalAppHref, externalAppURL } from '../url.ts'
 
 const ANON_CREATOR = '-'
 const { User, Street } = models
@@ -75,7 +75,7 @@ export default async function (req, res, next) {
     const title = `${streetName} - Streetmix`
 
     res.locals.STREETMIX_TITLE = title
-    res.locals.STREETMIX_URL += `${userId}/${namespacedId}/`
+    res.locals.STREETMIX_URL = externalAppHref(`/${userId}/${namespacedId}/`)
 
     // If street is a DEFAULT_STREET or EMPTY_STREET, the public id for the street thumbnail is the street type, not the street id.
     const streetData = street.data && street.data.street
@@ -86,7 +86,7 @@ export default async function (req, res, next) {
       streetId = street.id
     }
 
-    const endpoint = `${appURL.origin}/api/v1/streets/${streetId}/image/`
+    const endpoint = new URL(`/api/v1/streets/${streetId}/image/`, externalAppURL.origin).href
 
     request.get(endpoint, handleFindStreetThumbnail)
   }

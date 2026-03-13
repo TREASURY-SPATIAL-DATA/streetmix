@@ -10,3 +10,4 @@ process.env.APP_PROTOCOL =
     : 'https'
 process.env.PORT = process.env.PORT || 8000
 process.env.NODE_ENV = process.env.NODE_ENV || 'development'
+process.env.APP_BASE_PATH = process.env.APP_BASE_PATH || ''

@@ -1,4 +1,6 @@
-export const JUST_SIGNED_IN_PATH = '/services/auth/just-signed-in'
+import { withAppBasePath } from './basePath.js'
+
+export const JUST_SIGNED_IN_PATH = withAppBasePath('/services/auth/just-signed-in')
 
 // New street template params
 export const STREET_TEMPLATES = {
@@ -12,11 +14,11 @@ export const STREET_TEMPLATES = {
 }
 
 // Path segments
-export const URL_NEW_STREET = '/new'
-export const URL_GLOBAL_GALLERY = '/gallery'
-export const URL_ERROR = '/error'
-export const URL_HELP = '/help'
-export const URL_SURVEY_FINISHED = '/survey-finished'
+export const URL_NEW_STREET = withAppBasePath('/new')
+export const URL_GLOBAL_GALLERY = withAppBasePath('/gallery')
+export const URL_ERROR = withAppBasePath('/error')
+export const URL_HELP = withAppBasePath('/help')
+export const URL_SURVEY_FINISHED = withAppBasePath('/survey-finished')
 
 // Error fragments that occur after /error/
 export const URL_ERROR_NO_TWITTER_REQUEST_TOKEN = 'no-twitter-request-token'
@@ -28,17 +30,17 @@ export const URL_ERROR_ACCESS_DENIED = 'access-denied'
 // Since URLs like “streetmix.net/new” are reserved, but we still want
 // @new to be able to use Streetmix, we prefix any reserved URLs with ~
 export const RESERVED_URLS = [
-  '/services',
+  withAppBasePath('/services'),
   URL_NEW_STREET,
   URL_GLOBAL_GALLERY,
   URL_ERROR,
   URL_HELP,
   URL_SURVEY_FINISHED,
-  '/streets',
-  '/terms-of-service',
-  '/privacy-policy',
-  '/map',
-  '/survey',
+  withAppBasePath('/streets'),
+  withAppBasePath('/terms-of-service'),
+  withAppBasePath('/privacy-policy'),
+  withAppBasePath('/map'),
+  withAppBasePath('/survey'),
 ]
 
 export const URL_RESERVED_PREFIX = '~'

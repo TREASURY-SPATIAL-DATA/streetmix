@@ -5,6 +5,7 @@ import rehypeExternalLinks from 'rehype-external-links'
 import { useSelector, useDispatch } from '~/src/store/hooks.js'
 import { hideDescription } from '~/src/store/slices/infoBubble.js'
 import { formatMessage } from '~/src/locales/locale.js'
+import { withAppBasePath } from '~/src/app/basePath.js'
 import { FloatingPanel } from '~/src/ui/FloatingPanel.js'
 import './DescriptionPanel.css'
 
@@ -67,7 +68,7 @@ export function DescriptionPanel() {
         <div className="description-content">
           {description.image && (
             <img
-              src={`/images/descriptions/${description.image}`}
+              src={withAppBasePath(`/images/descriptions/${description.image}`)}
               alt={caption ?? ''}
               draggable={false}
             />

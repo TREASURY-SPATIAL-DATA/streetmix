@@ -9,6 +9,18 @@
   inset: 0;
 }
 
+html.treasury-streetmix-embedded,
+body.treasury-streetmix-embedded {
+  overflow: hidden;
+}
+
+body.treasury-streetmix-embedded .menu-bar,
+body.treasury-streetmix-embedded .street-nameplate-container,
+body.treasury-streetmix-embedded .welcome-panel,
+body.treasury-streetmix-embedded .sponsor-banner {
+  display: none !important;
+}
+
 .main-screen {
   position: relative;
   z-index: var(--z-00-main-screen);

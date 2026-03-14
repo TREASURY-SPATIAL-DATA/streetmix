@@ -20,6 +20,7 @@ import { useSelector } from '../store/hooks.js'
 import { DebugInfo } from './DebugInfo.js'
 import { BlockingShield } from './BlockingShield.js'
 import { BlockingError } from './BlockingError.js'
+import { isEmbeddedRuntime } from './runtime.ts'
 import { StreetView } from './StreetView.js'
 import PrintContainer from './PrintContainer.js'
 import { WelcomePanel } from './WelcomePanel'
@@ -28,6 +29,7 @@ import Loading from './Loading.js'
 import SponsorBanner from './SponsorBanner.js'
 
 export function App() {
+  const embeddedRuntime = isEmbeddedRuntime()
   const [isLoading, setLoading] = useState(true)
   const locale = useSelector((state) => state.locale)
   const dir: Direction = useSelector(
@@ -53,6 +55,22 @@ export function App() {
     document.querySelector('html')!.dataset.colorMode = colorMode
   }, [colorMode])
 
+  useEffect(() => {
+    document.documentElement.classList.toggle(
+      'treasury-streetmix-embedded',
+      embeddedRuntime
+    )
+    document.body.classList.toggle(
+      'treasury-streetmix-embedded',
+      embeddedRuntime
+    )
+
+    return () => {
+      document.documentElement.classList.remove('treasury-streetmix-embedded')
+      document.body.classList.remove('treasury-streetmix-embedded')
+    }
+  }, [embeddedRuntime])
+
   return (
     <>
       <Loading isLoading={isLoading || !everythingLoaded} />
@@ -75,10 +93,10 @@ export function App() {
                 <DebugInfo />
                 <PrintContainer />
                 <div className="main-screen">
-                  <MenusContainer />
-                  <StreetNameplateContainer />
+                  {!embeddedRuntime ? <MenusContainer /> : null}
+                  {!embeddedRuntime ? <StreetNameplateContainer /> : null}
                   <DescriptionPanel />
-                  <WelcomePanel />
+                  {!embeddedRuntime ? <WelcomePanel /> : null}
                   <PaletteContainer />
                   <SkyPicker />
                   <SegmentDragLayer />
@@ -87,7 +105,7 @@ export function App() {
                   <SentimentSurveyContainer />
                   <CoastmixUI />
                 </div>
-                <SponsorBanner />
+                {!embeddedRuntime ? <SponsorBanner /> : null}
               </DndProvider>
             </IntlProvider>
           </DirectionProvider>

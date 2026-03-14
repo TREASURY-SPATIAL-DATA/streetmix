@@ -23,7 +23,7 @@ import store from '~/src/store'
 import { initialize } from '~/src/app/initialization.js'
 import { App } from '~/src/app/App.js'
 import { installTreasuryBridge } from '~/src/app/treasuryBridge.js'
-import { getRuntimeHostname } from '~/src/app/runtime.ts'
+import { getRuntimeHostname, isEmbeddedRuntime } from '~/src/app/runtime.ts'
 
 // Error tracking
 // Load this before all other modules. Only load when run in production.
@@ -37,8 +37,62 @@ if (
   })
 }
 
+const ensureEmbeddedContainer = (): HTMLElement | null => {
+  if (!isEmbeddedRuntime()) return null
+
+  let container = document.getElementById('react-app')
+  if (container) return container
+
+  let parkingRoot = document.getElementById('treasury-streetmix-inline-parking')
+  if (!parkingRoot) {
+    parkingRoot = document.createElement('div')
+    parkingRoot.id = 'treasury-streetmix-inline-parking'
+    parkingRoot.style.position = 'fixed'
+    parkingRoot.style.left = '-200vw'
+    parkingRoot.style.top = '-200vh'
+    parkingRoot.style.width = '1px'
+    parkingRoot.style.height = '1px'
+    parkingRoot.style.overflow = 'hidden'
+    parkingRoot.style.opacity = '0'
+    parkingRoot.style.pointerEvents = 'none'
+    parkingRoot.style.zIndex = '-1'
+    document.body.appendChild(parkingRoot)
+  }
+
+  let hostRoot = document.getElementById('treasury-streetmix-inline-host')
+  if (!hostRoot) {
+    hostRoot = document.createElement('div')
+    hostRoot.id = 'treasury-streetmix-inline-host'
+    hostRoot.style.position = 'absolute'
+    hostRoot.style.inset = '0'
+    hostRoot.style.width = '100%'
+    hostRoot.style.height = '100%'
+    hostRoot.style.overflow = 'hidden'
+    hostRoot.style.background = '#d7e4f0'
+
+    const svgRoot = document.createElement('div')
+    svgRoot.id = 'svg'
+    svgRoot.style.display = 'none'
+
+    container = document.createElement('div')
+    container.id = 'react-app'
+    container.className = 'app'
+    container.style.position = 'absolute'
+    container.style.inset = '0'
+
+    hostRoot.appendChild(svgRoot)
+    hostRoot.appendChild(container)
+    parkingRoot.appendChild(hostRoot)
+  } else {
+    container = hostRoot.querySelector('#react-app') as HTMLElement | null
+  }
+
+  return container
+}
+
 // Mount React components
-const container = document.getElementById('react-app')
+const container =
+  document.getElementById('react-app') ?? ensureEmbeddedContainer()
 if (!container) throw new Error('no element to mount to')
 
 const root = createRoot(container)

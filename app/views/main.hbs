@@ -91,6 +91,11 @@
     <meta name="msapplication-TileColor" content="#00a300" />
     <meta name="theme-color" content="#1a914e" />
 
+    {{! Treasury embed: methods this build's window.__TREASURY_STREETMIX__ }}
+    {{! exposes, so a host can feature-detect before loading the app. }}
+    {{! Kept in sync with client/src/app/treasuryBridge.ts by its test. }}
+    <meta name="treasury-streetmix-bridge" content="isReady getSnapshot capturePngDataUrl loadStreet" />
+
     {{! Styles }}
     <link href="{{APP_BASE_PATH}}/assets/main.{{cacheTimestamp}}.css" rel="stylesheet" />
 

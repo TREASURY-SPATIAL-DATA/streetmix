@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs'
+import path from 'node:path'
 import { vi, type Mock } from 'vitest'
 
 import store from '~/src/store'
@@ -256,6 +258,25 @@ describe('installTreasuryBridge', () => {
     expect(typeof window.__TREASURY_STREETMIX__?.loadStreet).toBe('function')
     expect(window.__TREASURY_STREETMIX__?.loadStreet(COMPOSER_STREET)).toBe(
       true
+    )
+  })
+
+  it('advertises exactly the bridge methods in the shell meta tag', () => {
+    vi.clearAllMocks()
+    mockState()
+    installTreasuryBridge()
+
+    const shell = readFileSync(
+      path.resolve(__dirname, '../../../app/views/main.hbs'),
+      'utf8'
+    )
+    const advertised = shell
+      .match(/<meta name="treasury-streetmix-bridge" content="([^"]*)"/)?.[1]
+      ?.split(/\s+/)
+      .sort()
+
+    expect(advertised).toEqual(
+      Object.keys(window.__TREASURY_STREETMIX__ ?? {}).sort()
     )
   })
 })
